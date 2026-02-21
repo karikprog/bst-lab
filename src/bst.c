@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-BST* InitTree()
+BST* initTree()
 {
     BST* tree = (BST*)malloc(sizeof(BST));
     if (tree == NULL) {
