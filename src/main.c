@@ -5,7 +5,7 @@
 // Primitive test
 int main(void)
 {
-    BST* tree = InitTree();
+    BST* tree = initTree();
     int err = bstInsert(tree, 10);
     if (err == -1) {
         printf("Memory allocation error\n");

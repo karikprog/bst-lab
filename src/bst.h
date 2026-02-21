@@ -12,6 +12,6 @@ typedef struct {
 } BST;
 
 int bstInsert(BST* tree, int value);
-BST* InitTree();
+BST* initTree();
 void bstFree(BST* tree);
 bool bstContains(BST* tree, int value);
