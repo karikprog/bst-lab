@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* ====================== assistens checksВспомогательные проверки ====================== */
+///// Assistens checks
 
 int testsPassed = 0;
 int testsFailed = 0;
@@ -56,7 +56,7 @@ void checkPtrNull(const char* testName, void* ptr)
     }
 }
 
-/* =========================== Tests =========================== */
+///// Tests
 
 void testInitTree()
 {
@@ -132,7 +132,7 @@ void testSearch()
     bstFree(&tree);
 }
 
-/* ======================= Run tests ======================= */
+//// Run tests
 
 int runTests()
 {
