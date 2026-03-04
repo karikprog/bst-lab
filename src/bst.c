@@ -25,15 +25,15 @@ void cleanTree(Node* root)
     free(root);
 }
 
-void bstFree(BST* tree)
+void bstFree(BST** treeRef)
 {
-    BST** treeRef = &tree;
+    BST* t = *treeRef;
     if (treeRef == NULL || *treeRef == NULL) {
         return;
     }
 
-    cleanTree(tree->root);
-    free(tree);
+    cleanTree(t->root);
+    free(t);
     *treeRef = NULL;
 }
 
