@@ -5,9 +5,9 @@
 
 ## В рамках работы реализованы следующие возможности:
 ### Базовые операции
-- void bstInsert(BST* tree, int value) 
+- int bstInsert(BST* tree, int value) 
 - bool bstContains(BST* tree, int value)
-- void bstFree(BST* tree)
+- void bstFree(BST** treeRef)
 
 ### Обходы (рекурсивные)
 - void bstInorder(BST* tree)
