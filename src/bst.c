@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-BST* initTree()
+BST* InitTree()
 {
     BST* tree = (BST*)malloc(sizeof(BST));
     if (tree == NULL) {
@@ -84,7 +84,6 @@ int bstInsert(BST* tree, int value)
             } else {
                 node = node->left;
             }
-
         } else {
             if (node->right == NULL) {
                 node->right = temp;
@@ -94,4 +93,56 @@ int bstInsert(BST* tree, int value)
             }
         }
     }
+}
+
+int bstMax(BST* tree)
+{
+    if (tree == NULL || tree->root == NULL) {
+        return 0;
+    }
+    Node* current = tree->root;
+    while (current->right != NULL) {
+        current = current->right;
+    }
+    return current->value;
+}
+
+int bstMin(BST* tree)
+{
+    if (tree == NULL || tree->root == NULL) {
+        return 0;
+    }
+    Node* current = tree->root;
+    while (current->left != NULL) {
+        current = current->left;
+    }
+    return current->value;
+}
+
+int bstSize(BST* tree)
+{
+    if (tree == NULL) {
+        return 0;
+    }
+    return tree->size;
+}
+
+static int nodeHeight(Node* node)
+{
+    if (node == NULL) {
+        return 0;
+    }
+
+    int leftHeight = nodeHeight(node->left);
+    int rightHeight = nodeHeight(node->right);
+
+    return (1 + ((leftHeight >= rightHeight) ? leftHeight : rightHeight));
+}
+
+int bstHeight(BST* tree)
+{
+    if (tree == NULL) {
+        return 0;
+    }
+    return nodeHeight(tree->root);
 }

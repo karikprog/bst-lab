@@ -18,3 +18,7 @@ BST* InitTree();
 Node* search(Node* node, int value);
 void bstFree(BST** treeRef);
 bool bstContains(BST* tree, int value);
+int bstMax(BST* tree);
+int bstMin(BST* tree);
+int bstSize(BST* tree);
+int bstHeight(BST* tree);
