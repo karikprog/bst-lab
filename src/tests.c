@@ -132,8 +132,90 @@ void testSearch()
     bstFree(&tree);
 }
 
-//// Run tests
+void testEmptyTreeFunctions()
+{
+    BST* tree = initTree();
+    checkInt("bstMax on empty tree", 0, bstMax(tree));
+    checkInt("bstMin on empty tree", 0, bstMin(tree));
+    checkInt("bstSize on empty tree", 0, bstSize(tree));
+    checkInt("bstHeight on empty tree", 0, bstHeight(tree));
+    bstFree(&tree);
+}
 
+void testSingleNodeFunctions()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 42);
+    checkInt("bstMax single node", 42, bstMax(tree));
+    checkInt("bstMin single node", 42, bstMin(tree));
+    checkInt("bstSize single node", 1, bstSize(tree));
+    checkInt("bstHeight single node", 1, bstHeight(tree));
+    bstFree(&tree);
+}
+
+void testMultipleNodes()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 10);
+    bstInsert(tree, 5);
+    bstInsert(tree, 15);
+    bstInsert(tree, 2);
+    bstInsert(tree, 7);
+    bstInsert(tree, 12);
+    bstInsert(tree, 20);
+
+    checkInt("bstMax multiple", 20, bstMax(tree));
+    checkInt("bstMin multiple", 2, bstMin(tree));
+    checkInt("bstSize multiple", 7, bstSize(tree));
+    checkInt("bstHeight multiple (balanced)", 3, bstHeight(tree));
+    bstFree(&tree);
+}
+
+void testLeftSkewed()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 40);
+    bstInsert(tree, 30);
+    bstInsert(tree, 20);
+    bstInsert(tree, 10);
+
+    checkInt("bstMax left-skewed", 40, bstMax(tree));
+    checkInt("bstMin left-skewed", 10, bstMin(tree));
+    checkInt("bstSize left-skewed", 4, bstSize(tree));
+    checkInt("bstHeight left-skewed", 4, bstHeight(tree));
+    bstFree(&tree);
+}
+
+void testRightSkewed()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 10);
+    bstInsert(tree, 20);
+    bstInsert(tree, 30);
+    bstInsert(tree, 40);
+
+    checkInt("bstMax right-skewed", 40, bstMax(tree));
+    checkInt("bstMin right-skewed", 10, bstMin(tree));
+    checkInt("bstSize right-skewed", 4, bstSize(tree));
+    checkInt("bstHeight right-skewed", 4, bstHeight(tree));
+    bstFree(&tree);
+}
+
+void testWithZero()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 0);
+    bstInsert(tree, -5);
+    bstInsert(tree, 5);
+
+    checkInt("bstMax with zero", 5, bstMax(tree));
+    checkInt("bstMin with zero", -5, bstMin(tree));
+    checkInt("bstSize with zero", 3, bstSize(tree));
+    checkInt("bstHeight with zero", 2, bstHeight(tree));
+    bstFree(&tree);
+}
+
+// Runtest
 int runTests()
 {
     testInitTree();
@@ -141,6 +223,12 @@ int runTests()
     testInsertMultiple();
     testDuplicateInsert();
     testSearch();
+    testEmptyTreeFunctions();
+    testSingleNodeFunctions();
+    testMultipleNodes();
+    testLeftSkewed();
+    testRightSkewed();
+    testWithZero();
 
     fprintf(stderr,
         "\nTests passed: %d\nTests failed: %d\n",
