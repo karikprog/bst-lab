@@ -50,6 +50,9 @@ Node* search(Node* node, int value)
 
 bool bstContains(BST* tree, int value)
 {
+    if (tree == NULL) {
+        return false;
+    }
     if (search(tree->root, value) != NULL) {
         return true;
     }
@@ -58,8 +61,8 @@ bool bstContains(BST* tree, int value)
 
 int bstInsert(BST* tree, int value)
 {
-    if (bstContains(tree, value) == true) {
-        return 0;
+    if (tree == NULL) {
+        return -1;
     }
 
     Node* temp = (Node*)malloc(sizeof(Node));
@@ -75,11 +78,16 @@ int bstInsert(BST* tree, int value)
         return 0;
     }
     Node* node = tree->root;
-    tree->size++;
+
     while (1) {
+        if (node->value == value) {
+            free(temp);
+            return 0;
+        }
         if (node->value > value) {
             if (node->left == NULL) {
                 node->left = temp;
+                tree->size++;
                 return 0;
             } else {
                 node = node->left;
@@ -88,6 +96,7 @@ int bstInsert(BST* tree, int value)
         } else {
             if (node->right == NULL) {
                 node->right = temp;
+                tree->size++;
                 return 0;
             } else {
                 node = node->right;
