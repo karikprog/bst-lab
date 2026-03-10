@@ -95,31 +95,33 @@ int bstInsert(BST* tree, int value)
     }
 }
 
-int bstMax(BST* tree)
+bool bstMax(const BST* tree, int* result)
 {
     if (tree == NULL || tree->root == NULL) {
-        return 0;
+        return false;
     }
     Node* current = tree->root;
     while (current->right != NULL) {
         current = current->right;
     }
-    return current->value;
+    *result = current->value;
+    return true;
 }
 
-int bstMin(BST* tree)
+bool bstMin(const BST* tree, int* result)
 {
     if (tree == NULL || tree->root == NULL) {
-        return 0;
+        return false;
     }
     Node* current = tree->root;
     while (current->left != NULL) {
         current = current->left;
     }
-    return current->value;
+    *result = current->value;
+    return true;
 }
 
-int bstSize(BST* tree)
+int bstSize(const BST* tree)
 {
     if (tree == NULL) {
         return 0;
@@ -127,7 +129,7 @@ int bstSize(BST* tree)
     return tree->size;
 }
 
-static int nodeHeight(Node* node)
+static int nodeHeight(const Node* node)
 {
     if (node == NULL) {
         return 0;
@@ -139,7 +141,7 @@ static int nodeHeight(Node* node)
     return (1 + ((leftHeight >= rightHeight) ? leftHeight : rightHeight));
 }
 
-int bstHeight(BST* tree)
+int bstHeight(const BST* tree)
 {
     if (tree == NULL) {
         return 0;
