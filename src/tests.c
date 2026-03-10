@@ -320,17 +320,23 @@ void testDuplicateInsertExtended()
     bool success;
 
     success = bstMax(tree, &result);
+    checkBool("bstMax before duplicate returns true", true, success);
     checkInt("bstMax before duplicate", 15, result);
+
     success = bstMin(tree, &result);
+    checkBool("bstMin before duplicate returns true", true, success);
     checkInt("bstMin before duplicate", 5, result);
 
-    int res = bstInsert(tree, 10); // duplicate
+    int res = bstInsert(tree, 10);
     checkInt("duplicate insert returns 0", 0, res);
     checkInt("size not increased after duplicate", 3, tree->size);
 
     success = bstMax(tree, &result);
+    checkBool("bstMax after duplicate returns true", true, success);
     checkInt("bstMax after duplicate unchanged", 15, result);
+
     success = bstMin(tree, &result);
+    checkBool("bstMin after duplicate returns true", true, success);
     checkInt("bstMin after duplicate unchanged", 5, result);
 
     bstFree(&tree);
