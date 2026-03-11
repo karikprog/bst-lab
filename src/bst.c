@@ -104,3 +104,69 @@ int bstInsert(BST* tree, int value)
         }
     }
 }
+
+static void pushLeft(Iterator* iter, Node* node)
+{
+    if (iter == NULL || node == NULL) {
+        return;
+    }
+
+    while (node != NULL) {
+        iter->stack[iter->top++] = node;
+        node = node->left;
+    }
+}
+
+Iterator* iteratorInit(BST* tree)
+{
+    if (tree == NULL) {
+        return NULL;
+    }
+
+    Iterator* iter = malloc(sizeof(Iterator));
+    if (iter == NULL) {
+        return NULL;
+    }
+    iter->capacity = tree->size;
+    iter->top = 0;
+    iter->stack = malloc(sizeof(Node*) * iter->capacity);
+    if (iter->stack == NULL) {
+        free(iter);
+        return NULL;
+    }
+
+    pushLeft(iter, tree->root);
+    return iter;
+}
+
+bool iteratorHasNext(Iterator* iter)
+{
+    if (iter == NULL || iter->top == 0) {
+        return false;
+    }
+    return true;
+}
+
+bool iteratorNext(Iterator* iter, int* result)
+{
+    if (!iteratorHasNext(iter)) {
+        return false;
+    }
+
+    Node* node = iter->stack[--iter->top];
+    if (node->right != NULL) {
+        pushLeft(iter, node->right);
+    }
+
+    *result = node->value;
+    return true;
+}
+
+void iteratorFree(Iterator* iter)
+{
+    if (iter == NULL) {
+        return;
+    }
+    free(iter->stack);
+    free(iter);
+}
