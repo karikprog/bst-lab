@@ -105,7 +105,7 @@ int bstInsert(BST* tree, int value)
     }
 }
 
-static void pushLeft(Iterator* iter, const Node* node)
+static void pushLeft(Iterator* iter, Node* node)
 {
     if (iter == NULL || node == NULL) {
         return;
