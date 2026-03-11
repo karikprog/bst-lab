@@ -105,7 +105,7 @@ int bstInsert(BST* tree, int value)
     }
 }
 
-static void pushLeft(Iterator* iter, Node* node)
+static void pushLeft(Iterator* iter, const Node* node)
 {
     if (iter == NULL || node == NULL) {
         return;
@@ -117,7 +117,7 @@ static void pushLeft(Iterator* iter, Node* node)
     }
 }
 
-Iterator* iteratorInit(BST* tree)
+Iterator* iteratorInit(const BST* tree)
 {
     if (tree == NULL) {
         return NULL;
@@ -139,7 +139,7 @@ Iterator* iteratorInit(BST* tree)
     return iter;
 }
 
-bool iteratorHasNext(Iterator* iter)
+bool iteratorHasNext(const Iterator* iter)
 {
     if (iter == NULL || iter->top == 0) {
         return false;
@@ -153,7 +153,7 @@ bool iteratorNext(Iterator* iter, int* result)
         return false;
     }
 
-    Node* node = iter->stack[--iter->top];
+    const Node* node = iter->stack[--iter->top];
     if (node->right != NULL) {
         pushLeft(iter, node->right);
     }
