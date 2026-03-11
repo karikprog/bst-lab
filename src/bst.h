@@ -7,7 +7,8 @@ typedef struct Node {
     struct Node* right;
 } Node;
 
-typedef struct {
+typedef struct
+{
     Node* root;
     int size;
 } BST;
@@ -17,3 +18,7 @@ BST* initTree();
 Node* search(Node* node, int value);
 void bstFree(BST** treeRef);
 bool bstContains(BST* tree, int value);
+bool bstMax(const BST* tree, int* result);
+bool bstMin(const BST* tree, int* result);
+int bstSize(const BST* tree);
+int bstHeight(const BST* tree);
