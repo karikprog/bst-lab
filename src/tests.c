@@ -133,7 +133,6 @@ void testEmptyTreeFunctions()
     BST* tree = initTree();
     int result;
     bool success;
-
     success = bstMax(tree, &result);
     checkBool("bstMax on empty tree returns false", false, success);
 
@@ -145,6 +144,50 @@ void testEmptyTreeFunctions()
 
     bstFree(&tree);
 }
+void testIsValidSimple()
+{
+    BST* tree = initTree();
+    BST* treeEmpty = initTree();
+
+    checkBool("check empty tree", true, bstIsValid(treeEmpty));
+    checkBool("check null", false, bstIsValid(NULL));
+
+    bstInsert(tree, 20);
+    bstInsert(tree, 18);
+    bstInsert(tree, 10);
+    bstInsert(tree, 19);
+    bstInsert(tree, 30);
+    bstInsert(tree, 25);
+    bstInsert(tree, 50);
+
+    checkBool("check valide tree", true, bstIsValid(tree));
+
+    tree->root->left->left->value = 100;
+    tree->root->right->right->value = 5;
+
+    checkBool("check invalid tree", false, bstIsValid(tree));
+    bstFree(&tree);
+}
+
+void testIsValidAdvanced()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 50);
+    bstInsert(tree, 30);
+    bstInsert(tree, 70);
+    bstInsert(tree, 60);
+    bstInsert(tree, 80);
+
+    checkBool("Advanced: tree is valid", true, bstIsValid(tree));
+
+    tree->root->right->left->value = 20;
+
+    checkBool("Advanced: global violation detected", false, bstIsValid(tree));
+
+    bstFree(&tree);
+}
+
+//// Run tests
 
 void testSingleNodeFunctions()
 {
@@ -359,6 +402,8 @@ int runTests()
     testNegativeOnly();
     testNullTree();
     testDuplicateInsertExtended();
+    testIsValidSimple();
+    testIsValidAdvanced();
 
     fprintf(stderr,
         "\nTests passed: %d\nTests failed: %d\n",
