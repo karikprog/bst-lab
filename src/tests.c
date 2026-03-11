@@ -132,6 +132,125 @@ void testSearch()
     bstFree(&tree);
 }
 
+void testIteratorInitNullTree()
+{
+    Iterator* iter = iteratorInit(NULL);
+    checkPtrNull("iteratorInit NULL tree", iter);
+}
+
+void testIteratorEmptyTree()
+{
+    BST* tree = initTree();
+
+    Iterator* iter = iteratorInit(tree);
+
+    checkPtrNotNull("iteratorInit empty tree", iter);
+    checkBool("hasNext on empty tree", false, iteratorHasNext(iter));
+
+    iteratorFree(iter);
+    bstFree(&tree);
+}
+
+void testIteratorSingleElement()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 10);
+
+    Iterator* iter = iteratorInit(tree);
+
+    checkBool("hasNext single element", true, iteratorHasNext(iter));
+
+    int value = 0;
+    bool ok = iteratorNext(iter, &value);
+
+    checkBool("iteratorNext success", true, ok);
+    checkInt("iteratorNext value", 10, value);
+
+    checkBool("hasNext after last element", false, iteratorHasNext(iter));
+
+    iteratorFree(iter);
+    bstFree(&tree);
+}
+
+void testIteratorInorderTraversal()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 7);
+    bstInsert(tree, 3);
+    bstInsert(tree, 9);
+    bstInsert(tree, 1);
+    bstInsert(tree, 5);
+    bstInsert(tree, 10);
+    bstInsert(tree, 4);
+
+    Iterator* iter = iteratorInit(tree);
+
+    int expected[] = { 1, 3, 4, 5, 7, 9, 10 };
+    int value = 0;
+
+    for (int i = 0; i < 7; i++) {
+        bool ok = iteratorNext(iter, &value);
+        checkBool("iteratorNext inorder ok", true, ok);
+        checkInt("iteratorNext inorder value", expected[i], value);
+    }
+
+    checkBool("hasNext after traversal", false, iteratorHasNext(iter));
+
+    iteratorFree(iter);
+    bstFree(&tree);
+}
+
+void testIteratorNextWhenEmpty()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 5);
+
+    Iterator* iter = iteratorInit(tree);
+
+    int value;
+
+    iteratorNext(iter, &value);
+
+    bool ok = iteratorNext(iter, &value);
+    checkBool("iteratorNext on empty iterator", false, ok);
+
+    iteratorFree(iter);
+    bstFree(&tree);
+}
+
+void testIteratorFreeNull()
+{
+    iteratorFree(NULL);
+    checkBool("iteratorFree NULL safe", true, true);
+}
+
+void testIteratorRightSubtree()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 5);
+    bstInsert(tree, 3);
+    bstInsert(tree, 7);
+    bstInsert(tree, 6);
+
+    Iterator* iter = iteratorInit(tree);
+
+    int expected[] = { 3, 5, 6, 7 };
+    int value;
+
+    for (int i = 0; i < 4; i++) {
+        bool ok = iteratorNext(iter, &value);
+        checkBool("iteratorNext right subtree ok", true, ok);
+        checkInt("iteratorNext right subtree value", expected[i], value);
+    }
+
+    checkBool("hasNext after right subtree traversal", false, iteratorHasNext(iter));
+
+    iteratorFree(iter);
+    bstFree(&tree);
+}
+
 //// Run tests
 
 int runTests()
@@ -141,6 +260,13 @@ int runTests()
     testInsertMultiple();
     testDuplicateInsert();
     testSearch();
+    testIteratorInitNullTree();
+    testIteratorEmptyTree();
+    testIteratorSingleElement();
+    testIteratorInorderTraversal();
+    testIteratorNextWhenEmpty();
+    testIteratorFreeNull();
+    testIteratorRightSubtree();
 
     fprintf(stderr,
         "\nTests passed: %d\nTests failed: %d\n",
