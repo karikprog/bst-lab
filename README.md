@@ -22,6 +22,9 @@
 - int bstMax(BST* tree)
   *Аналогично bstMin.*
 
+### Проверка коректности
+- bool bstIsValid(const BST* tree)
+
 ## Участники
 - Караманов Карим (@Karimk5)
 - Стариков Егор (@playboishaman)
