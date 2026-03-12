@@ -535,6 +535,8 @@ int runTests()
 
     if (testsFailed == 0) {
         fprintf(stderr, "ALL TESTS PASSED\n");
+    } else {
+        return 1;
     }
     return 0;
 }
