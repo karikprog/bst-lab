@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-///// Assistens checks
-
 int testsPassed = 0;
 int testsFailed = 0;
 
@@ -71,7 +69,6 @@ void checkStr(const char* testName, const char* str1, const char* str2)
 }
 
 ///// Tests
-
 void testInitTree()
 {
     BST* tree = initTree();
@@ -142,6 +139,381 @@ void testSearch()
 
     checkPtrNotNull("search existing node", n1);
     checkPtrNull("search non-existing node", n2);
+
+    bstFree(&tree);
+}
+
+//// Run tests
+void testIteratorInitNullTree()
+{
+    Iterator* iter = iteratorInit(NULL);
+    checkPtrNull("iteratorInit NULL tree", iter);
+}
+
+void testIteratorEmptyTree()
+{
+    BST* tree = initTree();
+
+    Iterator* iter = iteratorInit(tree);
+
+    checkPtrNotNull("iteratorInit empty tree", iter);
+    checkBool("hasNext on empty tree", false, iteratorHasNext(iter));
+
+    iteratorFree(iter);
+    bstFree(&tree);
+}
+
+void testIteratorSingleElement()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 10);
+
+    Iterator* iter = iteratorInit(tree);
+
+    checkBool("hasNext single element", true, iteratorHasNext(iter));
+
+    int value = 0;
+    bool ok = iteratorNext(iter, &value);
+
+    checkBool("iteratorNext success", true, ok);
+    checkInt("iteratorNext value", 10, value);
+
+    checkBool("hasNext after last element", false, iteratorHasNext(iter));
+
+    iteratorFree(iter);
+    bstFree(&tree);
+}
+
+void testIteratorInorderTraversal()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 7);
+    bstInsert(tree, 3);
+    bstInsert(tree, 9);
+    bstInsert(tree, 1);
+    bstInsert(tree, 5);
+    bstInsert(tree, 10);
+    bstInsert(tree, 4);
+
+    Iterator* iter = iteratorInit(tree);
+
+    int expected[] = { 1, 3, 4, 5, 7, 9, 10 };
+    int value = 0;
+
+    for (int i = 0; i < 7; i++) {
+        bool ok = iteratorNext(iter, &value);
+        checkBool("iteratorNext inorder ok", true, ok);
+        checkInt("iteratorNext inorder value", expected[i], value);
+    }
+
+    checkBool("hasNext after traversal", false, iteratorHasNext(iter));
+
+    iteratorFree(iter);
+    bstFree(&tree);
+}
+
+void testIteratorNextWhenEmpty()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 5);
+
+    Iterator* iter = iteratorInit(tree);
+
+    int value;
+
+    iteratorNext(iter, &value);
+
+    bool ok = iteratorNext(iter, &value);
+    checkBool("iteratorNext on empty iterator", false, ok);
+
+    iteratorFree(iter);
+    bstFree(&tree);
+}
+
+void testIteratorFreeNull()
+{
+    iteratorFree(NULL);
+    checkBool("iteratorFree NULL safe", true, true);
+}
+
+void testIteratorRightSubtree()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 5);
+    bstInsert(tree, 3);
+    bstInsert(tree, 7);
+    bstInsert(tree, 6);
+
+    Iterator* iter = iteratorInit(tree);
+
+    int expected[] = { 3, 5, 6, 7 };
+    int value;
+
+    for (int i = 0; i < 4; i++) {
+        bool ok = iteratorNext(iter, &value);
+        checkBool("iteratorNext right subtree ok", true, ok);
+        checkInt("iteratorNext right subtree value", expected[i], value);
+    }
+
+    checkBool("hasNext after right subtree traversal", false, iteratorHasNext(iter));
+    iteratorFree(iter);
+}
+
+void testEmptyTreeFunctions()
+{
+    BST* tree = initTree();
+    int result;
+    bool success;
+    success = bstMax(tree, &result);
+    checkBool("bstMax on empty tree returns false", false, success);
+
+    success = bstMin(tree, &result);
+    checkBool("bstMin on empty tree returns false", false, success);
+
+    checkInt("bstSize on empty tree", 0, bstSize(tree));
+    checkInt("bstHeight on empty tree", 0, bstHeight(tree));
+
+    bstFree(&tree);
+}
+
+void testIsValidSimple()
+{
+    BST* tree = initTree();
+    BST* treeEmpty = initTree();
+
+    checkBool("check empty tree", true, bstIsValid(treeEmpty));
+    checkBool("check null", false, bstIsValid(NULL));
+
+    bstInsert(tree, 20);
+    bstInsert(tree, 18);
+    bstInsert(tree, 10);
+    bstInsert(tree, 19);
+    bstInsert(tree, 30);
+    bstInsert(tree, 25);
+    bstInsert(tree, 50);
+
+    checkBool("check valide tree", true, bstIsValid(tree));
+
+    tree->root->left->left->value = 100;
+    tree->root->right->right->value = 5;
+
+    checkBool("check invalid tree", false, bstIsValid(tree));
+    bstFree(&tree);
+}
+
+void testIsValidAdvanced()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 50);
+    bstInsert(tree, 30);
+    bstInsert(tree, 70);
+    bstInsert(tree, 60);
+    bstInsert(tree, 80);
+
+    checkBool("Advanced: tree is valid", true, bstIsValid(tree));
+
+    tree->root->right->left->value = 20;
+
+    checkBool("Advanced: global violation detected", false, bstIsValid(tree));
+
+    bstFree(&tree);
+}
+
+//// Run tests
+void testSingleNodeFunctions()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 42);
+    int result;
+    bool success;
+
+    success = bstMax(tree, &result);
+    checkBool("bstMax single node returns true", true, success);
+    checkInt("bstMax single node value", 42, result);
+
+    success = bstMin(tree, &result);
+    checkBool("bstMin single node returns true", true, success);
+    checkInt("bstMin single node value", 42, result);
+
+    checkInt("bstSize single node", 1, bstSize(tree));
+    checkInt("bstHeight single node", 1, bstHeight(tree));
+
+    bstFree(&tree);
+}
+
+void testMultipleNodes()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 10);
+    bstInsert(tree, 5);
+    bstInsert(tree, 15);
+    bstInsert(tree, 2);
+    bstInsert(tree, 7);
+    bstInsert(tree, 12);
+    bstInsert(tree, 20);
+
+    int result;
+    bool success;
+
+    success = bstMax(tree, &result);
+    checkBool("bstMax multiple returns true", true, success);
+    checkInt("bstMax multiple", 20, result);
+
+    success = bstMin(tree, &result);
+    checkBool("bstMin multiple returns true", true, success);
+    checkInt("bstMin multiple", 2, result);
+
+    checkInt("bstSize multiple", 7, bstSize(tree));
+    checkInt("bstHeight multiple (balanced)", 3, bstHeight(tree));
+
+    bstFree(&tree);
+}
+
+void testLeftSkewed()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 40);
+    bstInsert(tree, 30);
+    bstInsert(tree, 20);
+    bstInsert(tree, 10);
+
+    int result;
+    bool success;
+
+    success = bstMax(tree, &result);
+    checkBool("bstMax left-skewed returns true", true, success);
+    checkInt("bstMax left-skewed", 40, result);
+
+    success = bstMin(tree, &result);
+    checkBool("bstMin left-skewed returns true", true, success);
+    checkInt("bstMin left-skewed", 10, result);
+
+    checkInt("bstSize left-skewed", 4, bstSize(tree));
+    checkInt("bstHeight left-skewed", 4, bstHeight(tree));
+
+    bstFree(&tree);
+}
+
+void testRightSkewed()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 10);
+    bstInsert(tree, 20);
+    bstInsert(tree, 30);
+    bstInsert(tree, 40);
+
+    int result;
+    bool success;
+
+    success = bstMax(tree, &result);
+    checkBool("bstMax right-skewed returns true", true, success);
+    checkInt("bstMax right-skewed", 40, result);
+
+    success = bstMin(tree, &result);
+    checkBool("bstMin right-skewed returns true", true, success);
+    checkInt("bstMin right-skewed", 10, result);
+
+    checkInt("bstSize right-skewed", 4, bstSize(tree));
+    checkInt("bstHeight right-skewed", 4, bstHeight(tree));
+
+    bstFree(&tree);
+}
+
+void testWithZero()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 0);
+    bstInsert(tree, -5);
+    bstInsert(tree, 5);
+
+    int result;
+    bool success;
+
+    success = bstMax(tree, &result);
+    checkBool("bstMax with zero returns true", true, success);
+    checkInt("bstMax with zero", 5, result);
+
+    success = bstMin(tree, &result);
+    checkBool("bstMin with zero returns true", true, success);
+    checkInt("bstMin with zero", -5, result);
+
+    checkInt("bstSize with zero", 3, bstSize(tree));
+    checkInt("bstHeight with zero", 2, bstHeight(tree));
+
+    bstFree(&tree);
+}
+
+void testNegativeOnly()
+{
+    BST* tree = initTree();
+    bstInsert(tree, -10);
+    bstInsert(tree, -5);
+    bstInsert(tree, -3);
+    bstInsert(tree, -20);
+
+    int result;
+    bool success;
+
+    success = bstMax(tree, &result);
+    checkBool("bstMax negative only returns true", true, success);
+    checkInt("bstMax negative only", -3, result);
+
+    success = bstMin(tree, &result);
+    checkBool("bstMin negative only returns true", true, success);
+    checkInt("bstMin negative only", -20, result);
+
+    checkInt("bstSize negative only", 4, bstSize(tree));
+
+    bstFree(&tree);
+}
+
+void testNullTree()
+{
+    int result;
+    bool success;
+
+    success = bstMax(NULL, &result);
+    checkBool("bstMax with NULL returns false", false, success);
+
+    success = bstMin(NULL, &result);
+    checkBool("bstMin with NULL returns false", false, success);
+
+    checkInt("bstSize with NULL", 0, bstSize(NULL));
+    checkInt("bstHeight with NULL", 0, bstHeight(NULL));
+}
+
+void testDuplicateInsertExtended()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 10);
+    bstInsert(tree, 5);
+    bstInsert(tree, 15);
+
+    int result;
+    bool success;
+
+    success = bstMax(tree, &result);
+    checkBool("bstMax before duplicate returns true", true, success);
+    checkInt("bstMax before duplicate", 15, result);
+
+    success = bstMin(tree, &result);
+    checkBool("bstMin before duplicate returns true", true, success);
+    checkInt("bstMin before duplicate", 5, result);
+
+    int res = bstInsert(tree, 10);
+    checkInt("duplicate insert returns 0", 0, res);
+    checkInt("size not increased after duplicate", 3, tree->size);
+
+    success = bstMax(tree, &result);
+    checkBool("bstMax after duplicate returns true", true, success);
+    checkInt("bstMax after duplicate unchanged", 15, result);
+
+    success = bstMin(tree, &result);
+    checkBool("bstMin after duplicate returns true", true, success);
+    checkInt("bstMin after duplicate unchanged", 5, result);
 
     bstFree(&tree);
 }
@@ -286,8 +658,8 @@ void testDfsOnNormalTree()
 
     bstFree(&tree);
 }
-//// Run tests
 
+// Runtest
 int runTests()
 {
     testInitTree();
@@ -295,6 +667,24 @@ int runTests()
     testInsertMultiple();
     testDuplicateInsert();
     testSearch();
+    testIteratorInitNullTree();
+    testIteratorEmptyTree();
+    testIteratorSingleElement();
+    testIteratorInorderTraversal();
+    testIteratorNextWhenEmpty();
+    testIteratorFreeNull();
+    testIteratorRightSubtree();
+    testEmptyTreeFunctions();
+    testSingleNodeFunctions();
+    testMultipleNodes();
+    testLeftSkewed();
+    testRightSkewed();
+    testWithZero();
+    testNegativeOnly();
+    testNullTree();
+    testDuplicateInsertExtended();
+    testIsValidSimple();
+    testIsValidAdvanced();
     testDfsEmptyTree();
     testDfsOneNode();
     testDfsOnNormalTree();
