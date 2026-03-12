@@ -502,6 +502,236 @@ void testDuplicateInsertExtended()
     bstFree(&tree);
 }
 
+void testDeleteNodeRightChild()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 10);
+    bstInsert(tree, 15);
+    bstInsert(tree, 20);
+
+    int sizeBefore = bstSize(tree);
+
+    bstDelete(tree, 15);
+
+    checkBool("delete right child: contains 15", false, bstContains(tree, 15));
+    checkBool("delete right child: contains 20", true, bstContains(tree, 20));
+    checkInt("delete right child: size decreased", sizeBefore - 1, bstSize(tree));
+    checkBool("delete right child: tree valid", true, bstIsValid(tree));
+
+    bstFree(&tree);
+}
+
+void testDeleteNodeLeftChild()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 10);
+    bstInsert(tree, 5);
+    bstInsert(tree, 2);
+
+    int sizeBefore = bstSize(tree);
+
+    bstDelete(tree, 5);
+
+    checkBool("delete left child: contains 5", false, bstContains(tree, 5));
+    checkBool("delete left child: contains 2", true, bstContains(tree, 2));
+    checkInt("delete left child: size decreased", sizeBefore - 1, bstSize(tree));
+    checkBool("delete left child: tree valid", true, bstIsValid(tree));
+
+    bstFree(&tree);
+}
+
+void testDeleteTwoChildren()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 10);
+    bstInsert(tree, 5);
+    bstInsert(tree, 15);
+    bstInsert(tree, 2);
+    bstInsert(tree, 7);
+
+    int sizeBefore = bstSize(tree);
+
+    bstDelete(tree, 5);
+
+    checkBool("delete two children: contains 5", false, bstContains(tree, 5));
+    checkBool("delete two children: contains 2", true, bstContains(tree, 2));
+    checkBool("delete two children: contains 7", true, bstContains(tree, 7));
+    checkInt("delete two children: size decreased", sizeBefore - 1, bstSize(tree));
+    checkBool("delete two children: tree valid", true, bstIsValid(tree));
+
+    bstFree(&tree);
+}
+
+void testDeleteNonExisting()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 10);
+    bstInsert(tree, 5);
+    bstInsert(tree, 15);
+
+    int sizeBefore = bstSize(tree);
+
+    bstDelete(tree, 999);
+
+    checkInt("delete non-existing: size unchanged", sizeBefore, bstSize(tree));
+    checkBool("delete non-existing: tree valid", true, bstIsValid(tree));
+    checkBool("delete non-existing: contains 10", true, bstContains(tree, 10));
+    checkBool("delete non-existing: contains 5", true, bstContains(tree, 5));
+    checkBool("delete non-existing: contains 15", true, bstContains(tree, 15));
+
+    bstFree(&tree);
+}
+
+void testDeleteRoot()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 10);
+    bstInsert(tree, 5);
+    bstInsert(tree, 15);
+
+    int sizeBefore = bstSize(tree);
+
+    bstDelete(tree, 10);
+
+    checkBool("delete root: contains 10", false, bstContains(tree, 10));
+    checkBool("delete root: contains 5", true, bstContains(tree, 5));
+    checkBool("delete root: contains 15", true, bstContains(tree, 15));
+    checkInt("delete root: size decreased", sizeBefore - 1, bstSize(tree));
+    checkBool("delete root: tree valid", true, bstIsValid(tree));
+
+    bstFree(&tree);
+}
+
+void testDeleteSuccessorWithRightChild()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 10);
+    bstInsert(tree, 5);
+    bstInsert(tree, 20);
+    bstInsert(tree, 15);
+    bstInsert(tree, 17);
+
+    bstDelete(tree, 10);
+
+    checkBool("successor-right-child: contains 17", true, bstContains(tree, 17));
+    checkBool("successor-right-child: tree valid", true, bstIsValid(tree));
+    checkInt("successor-right-child: size", 4, bstSize(tree));
+
+    bstFree(&tree);
+}
+
+void testDeleteKeepsSubtrees()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 50);
+    bstInsert(tree, 30);
+    bstInsert(tree, 70);
+    bstInsert(tree, 60);
+    bstInsert(tree, 55);
+
+    bstDelete(tree, 50);
+
+    checkBool("keep-subtree: contains 55", true, bstContains(tree, 55));
+    checkBool("keep-subtree: contains 60", true, bstContains(tree, 60));
+    checkBool("keep-subtree: tree valid", true, bstIsValid(tree));
+
+    bstFree(&tree);
+}
+
+void testDeleteNodeWithSingleChildComplex()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 10);
+    bstInsert(tree, 20);
+    bstInsert(tree, 15);
+
+    bstDelete(tree, 20);
+
+    checkBool("single-child-complex: contains 15", true, bstContains(tree, 15));
+    checkBool("single-child-complex: tree valid", true, bstIsValid(tree));
+    checkInt("single-child-complex: size", 2, bstSize(tree));
+
+    bstFree(&tree);
+}
+
+void testDeleteRootComplex()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 40);
+    bstInsert(tree, 20);
+    bstInsert(tree, 60);
+    bstInsert(tree, 10);
+    bstInsert(tree, 30);
+    bstInsert(tree, 50);
+    bstInsert(tree, 70);
+
+    bstDelete(tree, 40);
+
+    checkBool("delete-root-complex: tree valid", true, bstIsValid(tree));
+    checkBool("delete-root-complex: contains 50", true, bstContains(tree, 50));
+    checkBool("delete-root-complex: contains 20", true, bstContains(tree, 20));
+    checkInt("delete-root-complex: size", 6, bstSize(tree));
+
+    bstFree(&tree);
+}
+
+void testDeleteMultipleSequential()
+{
+    BST* tree = initTree();
+
+    for (int i = 1; i <= 10; i++) {
+        bstInsert(tree, i);
+    }
+
+    bstDelete(tree, 5);
+    bstDelete(tree, 6);
+    bstDelete(tree, 7);
+
+    checkBool("delete-multiple: contains 5", false, bstContains(tree, 5));
+    checkBool("delete-multiple: contains 6", false, bstContains(tree, 6));
+    checkBool("delete-multiple: contains 7", false, bstContains(tree, 7));
+
+    checkBool("delete-multiple: tree valid", true, bstIsValid(tree));
+    checkInt("delete-multiple: size", 7, bstSize(tree));
+
+    bstFree(&tree);
+}
+
+void testIteratorAfterDelete()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 5);
+    bstInsert(tree, 3);
+    bstInsert(tree, 7);
+    bstInsert(tree, 6);
+
+    bstDelete(tree, 5);
+
+    Iterator* iter = iteratorInit(tree);
+
+    int prev = -100000;
+    int value;
+
+    while (iteratorHasNext(iter)) {
+        iteratorNext(iter, &value);
+        checkBool("iterator-after-delete sorted", value > prev, true);
+        prev = value;
+    }
+
+    iteratorFree(iter);
+    bstFree(&tree);
+}
+
 // Runtest
 int runTests()
 {
@@ -528,6 +758,17 @@ int runTests()
     testDuplicateInsertExtended();
     testIsValidSimple();
     testIsValidAdvanced();
+    testDeleteNodeRightChild();
+    testDeleteNodeLeftChild();
+    testDeleteTwoChildren();
+    testDeleteNonExisting();
+    testDeleteRoot();
+    testDeleteSuccessorWithRightChild();
+    testDeleteKeepsSubtrees();
+    testDeleteNodeWithSingleChildComplex();
+    testDeleteRootComplex();
+    testDeleteMultipleSequential();
+    testIteratorAfterDelete();
 
     fprintf(stderr,
         "\nTests passed: %d\nTests failed: %d\n",
