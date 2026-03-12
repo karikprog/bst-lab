@@ -249,7 +249,7 @@ bool bstIsValid(const BST* tree)
     return fl;
 }
 
-bool bstKthMin(const BST* tree, const int k, int* result)
+bool bstKthMin(const BST* tree, int k, int* result)
 {
     if (k <= 0 || tree == NULL || k > bstSize(tree)) {
         return false;
