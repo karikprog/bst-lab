@@ -32,6 +32,9 @@
 - `void iteratorFree(Iterator* it)`
   очистка итератора
 
+### Проверка коректности
+- bool bstIsValid(const BST* tree)
+
 ## Участники
 - Караманов Карим (@Karimk5)
 - Стариков Егор (@playboishaman)

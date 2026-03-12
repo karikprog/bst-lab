@@ -7,7 +7,8 @@ typedef struct Node {
     struct Node* right;
 } Node;
 
-typedef struct {
+typedef struct
+{
     Node* root;
     int size;
 } BST;
@@ -27,3 +28,8 @@ Iterator* iteratorInit(const BST* tree);
 bool iteratorHasNext(const Iterator* iter);
 bool iteratorNext(Iterator* iter, int* result);
 void iteratorFree(Iterator* iter);
+bool bstMax(const BST* tree, int* result);
+bool bstMin(const BST* tree, int* result);
+int bstSize(const BST* tree);
+int bstHeight(const BST* tree);
+bool bstIsValid(const BST* tree);

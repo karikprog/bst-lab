@@ -1,4 +1,5 @@
 #include "bst.h"
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -92,7 +93,6 @@ int bstInsert(BST* tree, int value)
             } else {
                 node = node->left;
             }
-
         } else {
             if (node->right == NULL) {
                 node->right = temp;
@@ -169,4 +169,82 @@ void iteratorFree(Iterator* iter)
     }
     free(iter->stack);
     free(iter);
+}
+bool bstMax(const BST* tree, int* result)
+{
+    if (tree == NULL || tree->root == NULL) {
+        return false;
+    }
+    Node* current = tree->root;
+    while (current->right != NULL) {
+        current = current->right;
+    }
+    *result = current->value;
+    return true;
+}
+
+bool bstMin(const BST* tree, int* result)
+{
+    if (tree == NULL || tree->root == NULL) {
+        return false;
+    }
+    Node* current = tree->root;
+    while (current->left != NULL) {
+        current = current->left;
+    }
+    *result = current->value;
+    return true;
+}
+
+int bstSize(const BST* tree)
+{
+    if (tree == NULL) {
+        return 0;
+    }
+    return tree->size;
+}
+
+static int nodeHeight(const Node* node)
+{
+    if (node == NULL) {
+        return 0;
+    }
+
+    int leftHeight = nodeHeight(node->left);
+    int rightHeight = nodeHeight(node->right);
+
+    return (1 + ((leftHeight >= rightHeight) ? leftHeight : rightHeight));
+}
+
+int bstHeight(const BST* tree)
+{
+    if (tree == NULL) {
+        return 0;
+    }
+    return nodeHeight(tree->root);
+}
+static void isValid(const Node* node, int min, int max, bool* fl)
+{
+    if (!(*fl) || node == NULL) {
+        return;
+    }
+
+    if (node->value <= min || node->value >= max) {
+        *fl = false;
+        return;
+    }
+
+    isValid(node->left, min, node->value, fl);
+
+    isValid(node->right, node->value, max, fl);
+}
+
+bool bstIsValid(const BST* tree)
+{
+    if (tree == NULL) {
+        return false;
+    }
+    bool fl = true;
+    isValid(tree->root, INT_MIN, INT_MAX, &fl);
+    return fl;
 }
