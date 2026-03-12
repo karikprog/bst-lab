@@ -305,7 +305,6 @@ void testIsValidAdvanced()
     bstFree(&tree);
 }
 
-//// Run tests
 void testSingleNodeFunctions()
 {
     BST* tree = initTree();
@@ -730,6 +729,25 @@ void testIteratorAfterDelete()
 
     iteratorFree(iter);
     bstFree(&tree);
+void testKthMin()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 20);
+    bstInsert(tree, 18);
+    bstInsert(tree, 10);
+    bstInsert(tree, 19);
+    bstInsert(tree, 30);
+    bstInsert(tree, 25);
+    bstInsert(tree, 50);
+
+    int val;
+    checkBool("find k-th minimum element error", true, bstKthMin(tree, 5, &val));
+    checkBool("checking thats k is positive", false, bstKthMin(tree, -2, &val));
+    checkBool("checking thats k more tree size", false, bstKthMin(tree, 10, &val));
+    checkBool("checking that tree is NULL", false, bstKthMin(NULL, 3, &val));
+
+    checkInt("invalid k-th minimum value", 25, val);
 }
 
 // Runtest
@@ -769,6 +787,7 @@ int runTests()
     testDeleteRootComplex();
     testDeleteMultipleSequential();
     testIteratorAfterDelete();
+    testKthMin();
 
     fprintf(stderr,
         "\nTests passed: %d\nTests failed: %d\n",

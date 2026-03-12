@@ -35,6 +35,9 @@
 ### Проверка коректности
 - bool bstIsValid(const BST* tree)
 
+### Нахождение k-ого минимального элемента
+- bool bstKthMin(const BST* tree, int k, int* result)
+
 ## Участники
 - Караманов Карим (@Karimk5)
 - Стариков Егор (@playboishaman)
