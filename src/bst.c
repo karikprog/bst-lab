@@ -250,6 +250,23 @@ bool bstIsValid(const BST* tree)
     return fl;
 }
 
+static Node* findParent(Node* root, Node* node)
+{
+    if (root == NULL || root == node) {
+        return NULL;
+    }
+
+    if (root->left == node || root->right == node) {
+        return root;
+    }
+
+    if (node->value < root->value) {
+        return findParent(root->left, node);
+    } else {
+        return findParent(root->right, node);
+    }
+}
+
 void bstDelete(BST* tree, int value)
 {
     if (tree == NULL || tree->root == NULL) {
@@ -270,6 +287,7 @@ void bstDelete(BST* tree, int value)
             child = child->left;
         }
 
+        current->value = child->value;
         if (parent == current) {
             current->right = child->right;
         } else {
@@ -279,7 +297,6 @@ void bstDelete(BST* tree, int value)
         free(child);
         tree->size--;
         return;
-
     } else if (current->left != NULL) {
         Node* parent = current;
         Node* child = parent->left;
@@ -289,6 +306,7 @@ void bstDelete(BST* tree, int value)
             child = child->right;
         }
 
+        current->value = child->value;
         if (parent == current) {
             current->left = child->left;
         } else {
@@ -298,9 +316,17 @@ void bstDelete(BST* tree, int value)
         free(child);
         tree->size--;
         return;
-
     } else {
-        free(current); // я не избежал dangling pointer;
+        Node* parent = findParent(tree->root, current);
+        if (parent == NULL) {
+            tree->root = NULL;
+        } else if (parent->left == current) {
+            parent->left = NULL;
+        } else {
+            parent->right = NULL;
+        }
+
+        free(current);
         tree->size--;
     }
 }
