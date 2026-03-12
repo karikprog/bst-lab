@@ -22,6 +22,16 @@
 - int bstMax(BST* tree)
   *Аналогично bstMin.*
 
+### Итератор
+- `Iterator* iteratorInit(BST* tree)`
+  иницилизация
+- `bool iteratorHasNext(Iterator* it)`
+  проверка на наличие элемента в стеке
+- `bool iteratorNext(Iterator* iter, int* result)`
+  элемент из стека возвращается через адрес переменной в вызывающем коде. сигнатура `bool` выбрана ради обработки ошибок.
+- `void iteratorFree(Iterator* it)`
+  очистка итератора
+
 ### Проверка коректности
 - bool bstIsValid(const BST* tree)
 

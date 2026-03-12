@@ -13,11 +13,21 @@ typedef struct
     int size;
 } BST;
 
+typedef struct {
+    Node** stack;
+    int capacity;
+    int top;
+} Iterator;
+
 int bstInsert(BST* tree, int value);
 BST* initTree();
 Node* search(Node* node, int value);
 void bstFree(BST** treeRef);
 bool bstContains(BST* tree, int value);
+Iterator* iteratorInit(const BST* tree);
+bool iteratorHasNext(const Iterator* iter);
+bool iteratorNext(Iterator* iter, int* result);
+void iteratorFree(Iterator* iter);
 bool bstMax(const BST* tree, int* result);
 bool bstMin(const BST* tree, int* result);
 int bstSize(const BST* tree);
