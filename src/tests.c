@@ -729,6 +729,7 @@ void testIteratorAfterDelete()
 
     iteratorFree(iter);
     bstFree(&tree);
+}
 void testKthMin()
 {
     BST* tree = initTree();
