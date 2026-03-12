@@ -251,7 +251,7 @@ bool bstIsValid(const BST* tree)
 
 bool bstKthMin(const BST* tree, const int k, int* result)
 {
-    if (k <= 0 || k > bstSize(tree)) {
+    if (k <= 0 || tree == NULL || k > bstSize(tree)) {
         return false;
     }
     Iterator* iter = iteratorInit(tree);
