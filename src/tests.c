@@ -242,8 +242,9 @@ void testIteratorRightSubtree()
     }
 
     checkBool("hasNext after right subtree traversal", false, iteratorHasNext(iter));
-
     iteratorFree(iter);
+}
+
 void testEmptyTreeFunctions()
 {
     BST* tree = initTree();
@@ -260,6 +261,7 @@ void testEmptyTreeFunctions()
 
     bstFree(&tree);
 }
+
 void testIsValidSimple()
 {
     BST* tree = initTree();
@@ -304,7 +306,6 @@ void testIsValidAdvanced()
 }
 
 //// Run tests
-
 void testSingleNodeFunctions()
 {
     BST* tree = initTree();
