@@ -95,3 +95,63 @@ int bstInsert(BST* tree, int value)
         }
     }
 }
+
+static void inOrder(const Node* node)
+{
+    if (node == NULL) {
+        return;
+    }
+    inOrder(node->left);
+    printf("%d ", node->value);
+    inOrder(node->right);
+}
+int bstInorder(const BST* tree)
+{
+    if (tree == NULL || tree->root == NULL) {
+        return -1;
+    }
+    printf("In order: \n");
+    inOrder(tree->root);
+    printf("\n");
+    return 0;
+}
+
+static void preOrder(const Node* node)
+{
+    if (node == NULL) {
+        return;
+    }
+    printf("%d ", node->value);
+    preOrder(node->left);
+    preOrder(node->right);
+}
+int bstPreorder(const BST* tree)
+{
+    if (tree == NULL || tree->root == NULL) {
+        return -1;
+    }
+    printf("Pre order: \n");
+    preOrder(tree->root);
+    printf("\n");
+    return 0;
+}
+
+static void postOrder(const Node* node)
+{
+    if (node == NULL) {
+        return;
+    }
+    postOrder(node->left);
+    postOrder(node->right);
+    printf("%d ", node->value);
+}
+int bstPostorder(const BST* tree)
+{
+    if (tree == NULL || tree->root == NULL) {
+        return -1;
+    }
+    printf("Post order: \n");
+    postOrder(tree->root);
+    printf("\n");
+    return 0;
+}
