@@ -515,8 +515,11 @@ void testKthMin()
 
     int val;
     checkBool("find k-th minimum element error", true, bstKthMin(tree, 5, &val));
+    checkBool("checking thats k is positive", false, bstKthMin(tree, -2, &val));
+    checkBool("checking thats k more tree size", false, bstKthMin(tree, 10, &val));
+    checkBool("checking that tree is NULL", false, bstKthMin(NULL, 3, &val));
 
-    checkInt("Invalid k-th minimum value", 25, val);
+    checkInt("invalid k-th minimum value", 25, val);
 }
 
 // Runtest
