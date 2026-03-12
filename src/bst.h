@@ -33,3 +33,4 @@ bool bstMin(const BST* tree, int* result);
 int bstSize(const BST* tree);
 int bstHeight(const BST* tree);
 bool bstIsValid(const BST* tree);
+void bstDelete(BST* tree, int value);

@@ -170,6 +170,7 @@ void iteratorFree(Iterator* iter)
     free(iter->stack);
     free(iter);
 }
+
 bool bstMax(const BST* tree, int* result)
 {
     if (tree == NULL || tree->root == NULL) {
@@ -247,4 +248,59 @@ bool bstIsValid(const BST* tree)
     bool fl = true;
     isValid(tree->root, INT_MIN, INT_MAX, &fl);
     return fl;
+}
+
+void bstDelete(BST* tree, int value)
+{
+    if (tree == NULL || tree->root == NULL) {
+        return;
+    }
+
+    Node* current = search(tree->root, value);
+    if (current == NULL) {
+        return;
+    }
+
+    if (current->right != NULL) {
+        Node* parent = current;
+        Node* child = parent->right;
+
+        while (child->left != NULL) {
+            parent = child;
+            child = child->left;
+        }
+
+        if (parent == current) {
+            current->right = child->right;
+        } else {
+            parent->left = child->right;
+        }
+
+        free(child);
+        tree->size--;
+        return;
+
+    } else if (current->left != NULL) {
+        Node* parent = current;
+        Node* child = parent->left;
+
+        while (child->right != NULL) {
+            parent = child;
+            child = child->right;
+        }
+
+        if (parent == current) {
+            current->left = child->left;
+        } else {
+            parent->right = child->left;
+        }
+
+        free(child);
+        tree->size--;
+        return;
+
+    } else {
+        free(current); // я не избежал dangling pointer;
+        tree->size--;
+    }
 }
