@@ -529,10 +529,20 @@ void testKthMin()
 void testDfsEmptyTree()
 {
     BST* tree = initTree();
+    int* vertices = bstInorder(tree);
+    checkPtrNull("inOrder returns NULL if tree is empty", vertices);
+    free(vertices);
+    vertices = NULL;
 
-    checkPtrNull("inOrder returns NULL if tree is empty", bstInorder(tree));
-    checkPtrNull("preOrder returns -1 if tree is empty", bstPreorder(tree));
-    checkPtrNull("postOrder returns -1 if tree is empty", bstPostorder(tree));
+    vertices = bstPreorder(tree);
+    checkPtrNull("preOrder returns -1 if tree is empty", vertices);
+    free(vertices);
+    vertices = NULL;
+
+    vertices = bstPostorder(tree);
+    checkPtrNull("postOrder returns -1 if tree is empty", vertices);
+    free(vertices);
+    vertices = NULL;
 
     bstFree(&tree);
 }
@@ -574,7 +584,7 @@ void testDfsOnOnlyLeftSybtree()
     bstInsert(tree, 8);
     bstInsert(tree, 7);
 
-    int* expVerticesForInorder = { 7, 8, 9, 10 };
+    int expVerticesForInorder[] = { 7, 8, 9, 10 };
     int* vertices = bstInorder(tree);
     for (int i = 0; i < tree->size; i++) {
         checkInt("vertices in Inprder", expVerticesForInorder[i], vertices[i]);
@@ -582,7 +592,7 @@ void testDfsOnOnlyLeftSybtree()
     free(vertices);
     vertices = NULL;
 
-    int* expVerticesForPreorder = { 10, 9, 8, 7 };
+    int expVerticesForPreorder[] = { 10, 9, 8, 7 };
     vertices = bstPreorder(tree);
     for (int i = 0; i < tree->size; i++) {
         checkInt("vertices in Preorder", expVerticesForPreorder[i], vertices[i]);
@@ -590,7 +600,7 @@ void testDfsOnOnlyLeftSybtree()
     free(vertices);
     vertices = NULL;
 
-    int* expVerticesForPostorder = { 7, 8, 9, 10 };
+    int expVerticesForPostorder[] = { 7, 8, 9, 10 };
     vertices = bstPostorder(tree);
     for (int i = 0; i < tree->size; i++) {
         checkInt("vertices in Postorder", expVerticesForPostorder[i], vertices[i]);
@@ -609,7 +619,7 @@ void testDfsOnOnlyRightSybtree()
     bstInsert(tree, 12);
     bstInsert(tree, 13);
 
-    int* expVerticesForInorder = { 10, 11, 12, 13 };
+    int expVerticesForInorder[] = { 10, 11, 12, 13 };
     int* vertices = bstInorder(tree);
     for (int i = 0; i < tree->size; i++) {
         checkInt("vertices in Inprder", expVerticesForInorder[i], vertices[i]);
@@ -617,7 +627,7 @@ void testDfsOnOnlyRightSybtree()
     free(vertices);
     vertices = NULL;
 
-    int* expVerticesForPreorder = { 10, 11, 12, 13 };
+    int expVerticesForPreorder[] = { 10, 11, 12, 13 };
     vertices = bstPreorder(tree);
     for (int i = 0; i < tree->size; i++) {
         checkInt("vertices in Preorder", expVerticesForPreorder[i], vertices[i]);
@@ -625,7 +635,7 @@ void testDfsOnOnlyRightSybtree()
     free(vertices);
     vertices = NULL;
 
-    int* expVerticesForPostorder = { 13, 12, 11, 10 };
+    int expVerticesForPostorder[] = { 13, 12, 11, 10 };
     vertices = bstPostorder(tree);
     for (int i = 0; i < tree->size; i++) {
         checkInt("vertices in Postorder", expVerticesForPostorder[i], vertices[i]);
@@ -648,7 +658,7 @@ void testDfsOnNormalTree()
     bstInsert(tree, 9);
     bstInsert(tree, 10);
 
-    int* expVerticesForInorder = { 1, 3, 4, 5, 7, 9, 10 };
+    int expVerticesForInorder[] = { 1, 3, 4, 5, 7, 9, 10 };
     int* vertices = bstInorder(tree);
     for (int i = 0; i < tree->size; i++) {
         checkInt("vertices in Inprder", expVerticesForInorder[i], vertices[i]);
@@ -656,7 +666,7 @@ void testDfsOnNormalTree()
     free(vertices);
     vertices = NULL;
 
-    int* expVerticesForPreorder = { 7, 3, 1, 5, 4, 9, 10 };
+    int expVerticesForPreorder[] = { 7, 3, 1, 5, 4, 9, 10 };
     vertices = bstPreorder(tree);
     for (int i = 0; i < tree->size; i++) {
         checkInt("vertices in Preorder", expVerticesForPreorder[i], vertices[i]);
@@ -664,7 +674,7 @@ void testDfsOnNormalTree()
     free(vertices);
     vertices = NULL;
 
-    int* expVerticesForPostorder = { 1, 4, 5, 3, 10, 9, 7 };
+    int expVerticesForPostorder[] = { 1, 4, 5, 3, 10, 9, 7 };
     vertices = bstPostorder(tree);
     for (int i = 0; i < tree->size; i++) {
         checkInt("vertices in Postorder", expVerticesForPostorder[i], vertices[i]);
