@@ -269,62 +269,71 @@ bool bstKthMin(const BST* tree, int k, int* result)
     return true;
 }
 
-static void inOrder(const Node* node)
+static void inOrder(const Node* node, int* arr, int* index)
 {
     if (node == NULL) {
         return;
     }
-    inOrder(node->left);
-    printf("%d ", node->value);
-    inOrder(node->right);
+    inOrder(node->left, arr, index);
+    arr[(*index)++] = node->value;
+    inOrder(node->right, arr, index);
 }
-int bstInorder(const BST* tree)
+int* bstInorder(const BST* tree)
 {
     if (tree == NULL || tree->root == NULL) {
-        return -1;
+        return NULL;
     }
-    printf("In order: \n");
-    inOrder(tree->root);
-    printf("\n");
-    return 0;
+    int* vertices = malloc(sizeof(int) * tree->size);
+    if (vertices == NULL) {
+        return NULL;
+    }
+    int index = 0;
+    inOrder(tree->root, vertices, &index);
+    return vertices;
 }
 
-static void preOrder(const Node* node)
+static void preOrder(const Node* node, int* arr, int* index)
 {
     if (node == NULL) {
         return;
     }
-    printf("%d ", node->value);
-    preOrder(node->left);
-    preOrder(node->right);
+    arr[(*index)++] = node->value;
+    preOrder(node->left, arr, index);
+    preOrder(node->right, arr, index);
 }
-int bstPreorder(const BST* tree)
+int* bstPreorder(const BST* tree)
 {
     if (tree == NULL || tree->root == NULL) {
-        return -1;
+        return NULL;
     }
-    printf("Pre order: \n");
-    preOrder(tree->root);
-    printf("\n");
-    return 0;
+    int* vertices = malloc(sizeof(int) * tree->size);
+    if (vertices == NULL) {
+        return NULL;
+    }
+    int index = 0;
+    preOrder(tree->root, vertices, &index);
+    return vertices;
 }
 
-static void postOrder(const Node* node)
+static void postOrder(const Node* node, int* arr, int* index)
 {
     if (node == NULL) {
         return;
     }
-    postOrder(node->left);
-    postOrder(node->right);
-    printf("%d ", node->value);
+    postOrder(node->left, arr, index);
+    postOrder(node->right, arr, index);
+    arr[(*index)++] = node->value;
 }
-int bstPostorder(const BST* tree)
+int* bstPostorder(const BST* tree)
 {
     if (tree == NULL || tree->root == NULL) {
-        return -1;
+        return NULL;
     }
-    printf("Post order: \n");
-    postOrder(tree->root);
-    printf("\n");
-    return 0;
+    int* vertices = malloc(sizeof(int) * tree->size);
+    if (vertices == NULL) {
+        return NULL;
+    }
+    int index = 0;
+    postOrder(tree->root, vertices, &index);
+    return vertices;
 }

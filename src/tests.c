@@ -56,18 +56,6 @@ void checkPtrNull(const char* testName, void* ptr)
     }
 }
 
-void checkStr(const char* testName, const char* str1, const char* str2)
-{
-    if (strstr(str1, str2) == NULL) {
-        fprintf(stderr,
-            "FAILED: %s | strings are NOT equal\n",
-            testName);
-        testsFailed++;
-    } else {
-        testsPassed++;
-    }
-}
-
 ///// Tests
 void testInitTree()
 {
@@ -538,26 +526,13 @@ void testKthMin()
     checkInt("invalid k-th minimum value", 25, val);
 }
 
-char buffer[1024];
-static int printfForTest(const char* format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    vsnprintf(buffer + strlen(buffer), sizeof(buffer) - strlen(buffer), format, args);
-    va_end(args);
-    return 0;
-}
-
 void testDfsEmptyTree()
 {
     BST* tree = initTree();
 
-    int res = bstInorder(tree);
-    checkInt("inOrder returns -1 if tree is empty", -1, res);
-    res = bstPreorder(tree);
-    checkInt("preOrder returns -1 if tree is empty", -1, res);
-    res = bstPostorder(tree);
-    checkInt("postOrder returns -1 if tree is empty", -1, res);
+    checkPtrNull("inOrder returns NULL if tree is empty", bstInorder(tree));
+    checkPtrNull("preOrder returns -1 if tree is empty", bstPreorder(tree));
+    checkPtrNull("postOrder returns -1 if tree is empty", bstPostorder(tree));
 
     bstFree(&tree);
 }
@@ -567,23 +542,26 @@ void testDfsOneNode()
     BST* tree = initTree();
     bstInsert(tree, 10);
 
-    buffer[0] = '\0';
-#define printf printfForTest
-    bstInorder(tree);
-#undef printf
-    checkStr("inOrder prints 10", buffer, "10");
+    int* vertices = bstInorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Inprder", 10, vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
 
-    buffer[0] = '\0';
-#define printf printfForTest
-    bstPreorder(tree);
-#undef printf
-    checkStr("preOrder prints 10", buffer, "10");
+    vertices = bstPreorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Preorder", 10, vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
 
-    buffer[0] = '\0';
-#define printf printfForTest
-    bstPostorder(tree);
-#undef printf
-    checkStr("postOrder prints 10", buffer, "10");
+    vertices = bstPostorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Postorder", 10, vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
 
     bstFree(&tree);
 }
@@ -596,23 +574,29 @@ void testDfsOnOnlyLeftSybtree()
     bstInsert(tree, 8);
     bstInsert(tree, 7);
 
-    buffer[0] = '\0';
-#define printf printfForTest
-    bstInorder(tree);
-#undef printf
-    checkStr("inOrder prints 7 8 9 10", buffer, "7 8 9 10");
+    int* expVerticesForInorder = { 7, 8, 9, 10 };
+    int* vertices = bstInorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Inprder", expVerticesForInorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
 
-    buffer[0] = '\0';
-#define printf printfForTest
-    bstPreorder(tree);
-#undef printf
-    checkStr("preOrder prints 10 9 8 7", buffer, "10 9 8 7");
+    int* expVerticesForPreorder = { 10, 9, 8, 7 };
+    vertices = bstPreorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Preorder", expVerticesForPreorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
 
-    buffer[0] = '\0';
-#define printf printfForTest
-    bstPostorder(tree);
-#undef printf
-    checkStr("postOrder prints 7 8 9 10", buffer, "7 8 9 10");
+    int* expVerticesForPostorder = { 7, 8, 9, 10 };
+    vertices = bstPostorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Postorder", expVerticesForPostorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
 
     bstFree(&tree);
 }
@@ -625,23 +609,29 @@ void testDfsOnOnlyRightSybtree()
     bstInsert(tree, 12);
     bstInsert(tree, 13);
 
-    buffer[0] = '\0';
-#define printf printfForTest
-    bstInorder(tree);
-#undef printf
-    checkStr("inOrder prints 10 11 12 13", buffer, "10 11 12 13");
+    int* expVerticesForInorder = { 10, 11, 12, 13 };
+    int* vertices = bstInorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Inprder", expVerticesForInorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
 
-    buffer[0] = '\0';
-#define printf printfForTest
-    bstPreorder(tree);
-#undef printf
-    checkStr("preOrder prints 10 11 12 13", buffer, "10 11 12 13");
+    int* expVerticesForPreorder = { 10, 11, 12, 13 };
+    vertices = bstPreorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Preorder", expVerticesForPreorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
 
-    buffer[0] = '\0';
-#define printf printfForTest
-    bstPostorder(tree);
-#undef printf
-    checkStr("postOrder prints 13 12 11 10", buffer, "13 12 11 10");
+    int* expVerticesForPostorder = { 13, 12, 11, 10 };
+    vertices = bstPostorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Postorder", expVerticesForPostorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
 
     bstFree(&tree);
 }
@@ -658,23 +648,29 @@ void testDfsOnNormalTree()
     bstInsert(tree, 9);
     bstInsert(tree, 10);
 
-    buffer[0] = '\0';
-#define printf printfForTest
-    bstInorder(tree);
-#undef printf
-    checkStr("inOrder prints 1 3 4 5 7 9 10", buffer, "1 3 4 5 7 9 10");
+    int* expVerticesForInorder = { 1, 3, 4, 5, 7, 9, 10 };
+    int* vertices = bstInorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Inprder", expVerticesForInorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
 
-    buffer[0] = '\0';
-#define printf printfForTest
-    bstPreorder(tree);
-#undef printf
-    checkStr("preOrder prints 7 3 1 5 4 9 10", buffer, "7 3 1 5 4 9 10");
+    int* expVerticesForPreorder = { 7, 3, 1, 5, 4, 9, 10 };
+    vertices = bstPreorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Preorder", expVerticesForPreorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
 
-    buffer[0] = '\0';
-#define printf printfForTest
-    bstPostorder(tree);
-#undef printf
-    checkStr("postOrder prints 1 4 5 3 10 9 7", buffer, "1 4 5 3 10 9 7");
+    int* expVerticesForPostorder = { 1, 4, 5, 3, 10, 9, 7 };
+    vertices = bstPostorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Postorder", expVerticesForPostorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
 
     bstFree(&tree);
 }
