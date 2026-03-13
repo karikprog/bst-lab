@@ -17,7 +17,7 @@ static void buildBalanced(BST* tree, const int* arr, const int START, const int 
 static Node* findParent(Node* root, Node* node) нужна в void bstDelete(BST* tree, int value)
 
 Функции, не используемые множеством:
-обходы, они специфичны для деревьевЮ а в множестве не гарантируется порядок выведения элементов
+обходы, они специфичны для деревьев, а в множестве не гарантируется порядок выведения элементов
 int bstHeight(const BST* tree), bool bstIsValid(const BST* tree) так же специфичны для деревьев и множеством не поддерживаются 
 int bstKthMin(BST* tree, int k) не стандартная функция для множества, могут возникнуть проблемы в случае замены реализации множества
 
