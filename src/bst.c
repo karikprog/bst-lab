@@ -253,17 +253,17 @@ static int compare(const void* x1, const void* x2)
 {
     return (*(int*)x1 - *(int*)x2);
 }
-static void buildBalanced(BST* tree, const int* arr, const int start, const int end)
+static void buildBalanced(BST* tree, const int* arr, const int START, const int END)
 {
-    if (start > end) {
+    if (START > END) {
         return;
     }
 
-    int mid = (start + end) / 2;
+    int mid = (START + END) / 2;
     bstInsert(tree, arr[mid]);
 
-    buildBalanced(tree, arr, start, mid - 1);
-    buildBalanced(tree, arr, mid + 1, end);
+    buildBalanced(tree, arr, START, mid - 1);
+    buildBalanced(tree, arr, mid + 1, END);
 }
 
 BST* bstMerge(const BST* tree1, const BST* tree2)
