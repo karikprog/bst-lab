@@ -249,6 +249,26 @@ bool bstIsValid(const BST* tree)
     return fl;
 }
 
+bool bstKthMin(const BST* tree, int k, int* result)
+{
+    if (k <= 0 || tree == NULL || k > bstSize(tree)) {
+        return false;
+    }
+    Iterator* iter = iteratorInit(tree);
+    int value;
+    bool ok;
+    for (int i = 0; i < k; i++) {
+        ok = iteratorNext(iter, &value);
+        if (!ok) {
+            iteratorFree(iter);
+            return false;
+        }
+    }
+    *result = value;
+    iteratorFree(iter);
+    return true;
+}
+
 static int compare(const void* x1, const void* x2)
 {
     return (*(int*)x1 - *(int*)x2);

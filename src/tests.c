@@ -305,65 +305,6 @@ void testIsValidAdvanced()
     bstFree(&tree);
 }
 
-void testMergeNullTree()
-{
-    BST* tree1 = initTree();
-    BST* tree2 = NULL;
-    BST* newTree = bstMerge(tree1, tree2);
-    checkPtrNull("attempt to merge null tree", newTree);
-    bstFree(&tree1);
-}
-
-void testMergeEmptyTree()
-{
-    BST* tree1 = initTree();
-    bstInsert(tree1, 3);
-    bstInsert(tree1, 1);
-    bstInsert(tree1, 2);
-    bstInsert(tree1, 10);
-    bstInsert(tree1, 7);
-    BST* tree2 = initTree();
-    BST* newTree = bstMerge(tree1, tree2);
-    checkBool("contains 3", true, bstContains(newTree, 3));
-    checkBool("contains 7", true, bstContains(newTree, 7));
-    checkBool("contains 1", true, bstContains(newTree, 1));
-    checkBool("contains 10", true, bstContains(newTree, 10));
-    checkBool("contains 2", true, bstContains(newTree, 2));
-    checkInt("size of new tree", 5, newTree->size);
-    bstFree(&tree1);
-    bstFree(&tree2);
-    bstFree(&newTree);
-}
-
-void testMergeTreeWithDublicate()
-{
-    BST* tree1 = initTree();
-    bstInsert(tree1, 3);
-    bstInsert(tree1, 1);
-    bstInsert(tree1, 2);
-    bstInsert(tree1, 10);
-    bstInsert(tree1, 7);
-    BST* tree2 = initTree();
-    bstInsert(tree2, 3);
-    bstInsert(tree2, 1);
-    bstInsert(tree2, 5);
-    bstInsert(tree2, 12);
-    bstInsert(tree2, 8);
-    BST* newTree = bstMerge(tree1, tree2);
-    checkBool("contains 3", true, bstContains(newTree, 3));
-    checkBool("contains 1", true, bstContains(newTree, 1));
-    checkBool("contains 2", true, bstContains(newTree, 2));
-    checkBool("contains 10", true, bstContains(newTree, 10));
-    checkBool("contains 7", true, bstContains(newTree, 7));
-    checkBool("contains 5", true, bstContains(newTree, 5));
-    checkBool("contains 12", true, bstContains(newTree, 12));
-    checkBool("contains 8", true, bstContains(newTree, 8));
-    checkInt("size of new tree", 8, newTree->size);
-    bstFree(&tree1);
-    bstFree(&tree2);
-    bstFree(&newTree);
-}
-
 //// Run tests
 void testSingleNodeFunctions()
 {
@@ -561,6 +502,86 @@ void testDuplicateInsertExtended()
     bstFree(&tree);
 }
 
+void testKthMin()
+{
+    BST* tree = initTree();
+
+    bstInsert(tree, 20);
+    bstInsert(tree, 18);
+    bstInsert(tree, 10);
+    bstInsert(tree, 19);
+    bstInsert(tree, 30);
+    bstInsert(tree, 25);
+    bstInsert(tree, 50);
+
+    int val;
+    checkBool("find k-th minimum element error", true, bstKthMin(tree, 5, &val));
+    checkBool("checking thats k is positive", false, bstKthMin(tree, -2, &val));
+    checkBool("checking thats k more tree size", false, bstKthMin(tree, 10, &val));
+    checkBool("checking that tree is NULL", false, bstKthMin(NULL, 3, &val));
+
+    checkInt("invalid k-th minimum value", 25, val);
+}
+
+void testMergeNullTree()
+{
+    BST* tree1 = initTree();
+    BST* tree2 = NULL;
+    BST* newTree = bstMerge(tree1, tree2);
+    checkPtrNull("attempt to merge null tree", newTree);
+    bstFree(&tree1);
+}
+
+void testMergeEmptyTree()
+{
+    BST* tree1 = initTree();
+    bstInsert(tree1, 3);
+    bstInsert(tree1, 1);
+    bstInsert(tree1, 2);
+    bstInsert(tree1, 10);
+    bstInsert(tree1, 7);
+    BST* tree2 = initTree();
+    BST* newTree = bstMerge(tree1, tree2);
+    checkBool("contains 3", true, bstContains(newTree, 3));
+    checkBool("contains 7", true, bstContains(newTree, 7));
+    checkBool("contains 1", true, bstContains(newTree, 1));
+    checkBool("contains 10", true, bstContains(newTree, 10));
+    checkBool("contains 2", true, bstContains(newTree, 2));
+    checkInt("size of new tree", 5, newTree->size);
+    bstFree(&tree1);
+    bstFree(&tree2);
+    bstFree(&newTree);
+}
+
+void testMergeTreeWithDublicate()
+{
+    BST* tree1 = initTree();
+    bstInsert(tree1, 3);
+    bstInsert(tree1, 1);
+    bstInsert(tree1, 2);
+    bstInsert(tree1, 10);
+    bstInsert(tree1, 7);
+    BST* tree2 = initTree();
+    bstInsert(tree2, 3);
+    bstInsert(tree2, 1);
+    bstInsert(tree2, 5);
+    bstInsert(tree2, 12);
+    bstInsert(tree2, 8);
+    BST* newTree = bstMerge(tree1, tree2);
+    checkBool("contains 3", true, bstContains(newTree, 3));
+    checkBool("contains 1", true, bstContains(newTree, 1));
+    checkBool("contains 2", true, bstContains(newTree, 2));
+    checkBool("contains 10", true, bstContains(newTree, 10));
+    checkBool("contains 7", true, bstContains(newTree, 7));
+    checkBool("contains 5", true, bstContains(newTree, 5));
+    checkBool("contains 12", true, bstContains(newTree, 12));
+    checkBool("contains 8", true, bstContains(newTree, 8));
+    checkInt("size of new tree", 8, newTree->size);
+    bstFree(&tree1);
+    bstFree(&tree2);
+    bstFree(&newTree);
+}
+
 // Runtest
 int runTests()
 {
@@ -587,6 +608,7 @@ int runTests()
     testDuplicateInsertExtended();
     testIsValidSimple();
     testIsValidAdvanced();
+    testKthMin();
     testMergeNullTree();
     testMergeEmptyTree();
     testMergeTreeWithDublicate();
