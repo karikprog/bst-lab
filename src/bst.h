@@ -33,3 +33,4 @@ bool bstMin(const BST* tree, int* result);
 int bstSize(const BST* tree);
 int bstHeight(const BST* tree);
 bool bstIsValid(const BST* tree);
+BST* bstMerge(const BST* tree1, const BST* tree2);
