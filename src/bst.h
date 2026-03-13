@@ -33,6 +33,7 @@ bool bstMin(const BST* tree, int* result);
 int bstSize(const BST* tree);
 int bstHeight(const BST* tree);
 bool bstIsValid(const BST* tree);
+bool bstKthMin(const BST* tree, int k, int* result);
 int bstInorder(const BST* tree);
 int bstPreorder(const BST* tree);
 int bstPostorder(const BST* tree);
