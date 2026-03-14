@@ -316,19 +316,18 @@ void bstDelete(BST* tree, int value)
         free(child);
         tree->size--;
         return;
-    } else {
-        Node* parent = findParent(tree->root, current);
-        if (parent == NULL) {
-            tree->root = NULL;
-        } else if (parent->left == current) {
-            parent->left = NULL;
-        } else {
-            parent->right = NULL;
-        }
-
-        free(current);
-        tree->size--;
     }
+    Node* parent = findParent(tree->root, current);
+    if (parent == NULL) {
+        tree->root = NULL;
+    } else if (parent->left == current) {
+        parent->left = NULL;
+    } else {
+        parent->right = NULL;
+    }
+
+    free(current);
+    tree->size--;
 }
 bool bstKthMin(const BST* tree, int k, int* result)
 {
