@@ -269,6 +269,75 @@ bool bstKthMin(const BST* tree, int k, int* result)
     return true;
 }
 
+static void inOrder(const Node* node, int* arr, int* index)
+{
+    if (node == NULL) {
+        return;
+    }
+    inOrder(node->left, arr, index);
+    arr[(*index)++] = node->value;
+    inOrder(node->right, arr, index);
+}
+int* bstInorder(const BST* tree)
+{
+    if (tree == NULL || tree->root == NULL) {
+        return NULL;
+    }
+    int* vertices = malloc(sizeof(int) * tree->size);
+    if (vertices == NULL) {
+        return NULL;
+    }
+    int index = 0;
+    inOrder(tree->root, vertices, &index);
+    return vertices;
+}
+
+static void preOrder(const Node* node, int* arr, int* index)
+{
+    if (node == NULL) {
+        return;
+    }
+    arr[(*index)++] = node->value;
+    preOrder(node->left, arr, index);
+    preOrder(node->right, arr, index);
+}
+int* bstPreorder(const BST* tree)
+{
+    if (tree == NULL || tree->root == NULL) {
+        return NULL;
+    }
+    int* vertices = malloc(sizeof(int) * tree->size);
+    if (vertices == NULL) {
+        return NULL;
+    }
+    int index = 0;
+    preOrder(tree->root, vertices, &index);
+    return vertices;
+}
+
+static void postOrder(const Node* node, int* arr, int* index)
+{
+    if (node == NULL) {
+        return;
+    }
+    postOrder(node->left, arr, index);
+    postOrder(node->right, arr, index);
+    arr[(*index)++] = node->value;
+}
+int* bstPostorder(const BST* tree)
+{
+    if (tree == NULL || tree->root == NULL) {
+        return NULL;
+    }
+    int* vertices = malloc(sizeof(int) * tree->size);
+    if (vertices == NULL) {
+        return NULL;
+    }
+    int index = 0;
+    postOrder(tree->root, vertices, &index);
+    return vertices;
+}
+
 static int compare(const void* x1, const void* x2)
 {
     return (*(int*)x1 - *(int*)x2);

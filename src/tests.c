@@ -1,7 +1,9 @@
 #include "bst.h"
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int testsPassed = 0;
 int testsFailed = 0;
@@ -54,6 +56,7 @@ void checkPtrNull(const char* testName, void* ptr)
     }
 }
 
+///// Tests
 void testInitTree()
 {
     BST* tree = initTree();
@@ -128,6 +131,7 @@ void testSearch()
     bstFree(&tree);
 }
 
+//// Run tests
 void testIteratorInitNullTree()
 {
     Iterator* iter = iteratorInit(NULL);
@@ -523,6 +527,165 @@ void testKthMin()
     checkInt("invalid k-th minimum value", 25, val);
 }
 
+void testDfsEmptyTree()
+{
+    BST* tree = initTree();
+    int* vertices = bstInorder(tree);
+    checkPtrNull("inOrder returns NULL if tree is empty", vertices);
+    free(vertices);
+    vertices = NULL;
+
+    vertices = bstPreorder(tree);
+    checkPtrNull("preOrder returns -1 if tree is empty", vertices);
+    free(vertices);
+    vertices = NULL;
+
+    vertices = bstPostorder(tree);
+    checkPtrNull("postOrder returns -1 if tree is empty", vertices);
+    free(vertices);
+    vertices = NULL;
+
+    bstFree(&tree);
+}
+
+void testDfsOneNode()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 10);
+
+    int* vertices = bstInorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Inprder", 10, vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
+
+    vertices = bstPreorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Preorder", 10, vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
+
+    vertices = bstPostorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Postorder", 10, vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
+
+    bstFree(&tree);
+}
+
+void testDfsOnOnlyLeftSybtree()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 10);
+    bstInsert(tree, 9);
+    bstInsert(tree, 8);
+    bstInsert(tree, 7);
+
+    int expVerticesForInorder[] = { 7, 8, 9, 10 };
+    int* vertices = bstInorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Inprder", expVerticesForInorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
+
+    int expVerticesForPreorder[] = { 10, 9, 8, 7 };
+    vertices = bstPreorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Preorder", expVerticesForPreorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
+
+    int expVerticesForPostorder[] = { 7, 8, 9, 10 };
+    vertices = bstPostorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Postorder", expVerticesForPostorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
+
+    bstFree(&tree);
+}
+
+void testDfsOnOnlyRightSybtree()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 10);
+    bstInsert(tree, 11);
+    bstInsert(tree, 12);
+    bstInsert(tree, 13);
+
+    int expVerticesForInorder[] = { 10, 11, 12, 13 };
+    int* vertices = bstInorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Inprder", expVerticesForInorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
+
+    int expVerticesForPreorder[] = { 10, 11, 12, 13 };
+    vertices = bstPreorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Preorder", expVerticesForPreorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
+
+    int expVerticesForPostorder[] = { 13, 12, 11, 10 };
+    vertices = bstPostorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Postorder", expVerticesForPostorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
+
+    bstFree(&tree);
+}
+
+void testDfsOnNormalTree()
+{
+    BST* tree = initTree();
+    bstInsert(tree, 7);
+    bstInsert(tree, 3);
+    bstInsert(tree, 9);
+    bstInsert(tree, 1);
+    bstInsert(tree, 5);
+    bstInsert(tree, 4);
+    bstInsert(tree, 9);
+    bstInsert(tree, 10);
+
+    int expVerticesForInorder[] = { 1, 3, 4, 5, 7, 9, 10 };
+    int* vertices = bstInorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Inprder", expVerticesForInorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
+
+    int expVerticesForPreorder[] = { 7, 3, 1, 5, 4, 9, 10 };
+    vertices = bstPreorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Preorder", expVerticesForPreorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
+
+    int expVerticesForPostorder[] = { 1, 4, 5, 3, 10, 9, 7 };
+    vertices = bstPostorder(tree);
+    for (int i = 0; i < tree->size; i++) {
+        checkInt("vertices in Postorder", expVerticesForPostorder[i], vertices[i]);
+    }
+    free(vertices);
+    vertices = NULL;
+
+    bstFree(&tree);
+}
+
 void testMergeNullTree()
 {
     BST* tree1 = initTree();
@@ -609,10 +772,14 @@ int runTests()
     testIsValidSimple();
     testIsValidAdvanced();
     testKthMin();
+    testDfsEmptyTree();
+    testDfsOneNode();
+    testDfsOnNormalTree();
+    testDfsOnOnlyLeftSybtree();
+    testDfsOnOnlyRightSybtree();
     testMergeNullTree();
     testMergeEmptyTree();
     testMergeTreeWithDublicate();
-
     fprintf(stderr,
         "\nTests passed: %d\nTests failed: %d\n",
         testsPassed, testsFailed);
