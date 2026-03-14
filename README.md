@@ -4,41 +4,58 @@
 - Данный проект представляет собой реализацию бинарного дерева поиска (BST) на языке C.
 
 ## В рамках работы реализованы следующие возможности:
+
 ### Базовые операции
-- int bstInsert(BST* tree, int value) 
-- bool bstContains(BST* tree, int value)
-- void bstFree(BST** treeRef)
+- `BST* initTree()`
+- `int bstInsert(BST* tree, int value)`
+  - дубликаты не добавляются
+- `bool bstContains(BST* tree, int value)`
+- `void bstDelete(BST* tree, int value)`
+- `void bstFree(BST** treeRef)`
+---
 
 ### Обходы (рекурсивные)
-- void bstInorder(BST* tree)
-- void bstPreorder(BST* tree) 
-- void bstPostorder(BST* tree)
+- `int* bstInorder(const BST* tree)`
+- `int* bstPreorder(const BST* tree)`
+- `int* bstPostorder(const BST* tree)`
+---
 
 ### Статистика
-- int bstHeight(BST* tree) 
-- int bstSize(BST* tree)
-- int bstMin(BST* tree) 
-  *Поведение на пустом дереве: возвращает 0*
-- int bstMax(BST* tree)
-  *Аналогично bstMin.*
+- `int bstHeight(const BST* tree)`
+- `int bstSize(const BST* tree)`
+- `bool bstMin(const BST* tree, int* result)`
+- `bool bstMax(const BST* tree, int* result)`
+---
 
 ### Итератор
-- `Iterator* iteratorInit(BST* tree)`
-  иницилизация
+- `Iterator* iteratorInit(const BST* tree)`
 - `bool iteratorHasNext(Iterator* it)`
-  проверка на наличие элемента в стеке
 - `bool iteratorNext(Iterator* iter, int* result)`
-  элемент из стека возвращается через адрес переменной в вызывающем коде. сигнатура `bool` выбрана ради обработки ошибок.
+  - элемент возвращается через указатель `result`
 - `void iteratorFree(Iterator* it)`
-  очистка итератора
 
-### Проверка коректности
-- bool bstIsValid(const BST* tree)
+---
+
+### Проверка корректности
+- `bool bstIsValid(const BST* tree)`
+
+---
 
 ### Нахождение k-ого минимального элемента
-- bool bstKthMin(const BST* tree, int k, int* result)
+- `bool bstKthMin(const BST* tree, int k, int* result)`
+
+---
+
+### Объединение деревьев
+- `BST* bstMerge(const BST* tree1, const BST* tree2)`
+
+---
 
 ## Участники
 - Караманов Карим (@Karimk5)
 - Стариков Егор (@playboishaman)
-- Кузьмищев Леонид(@qwekkh)
+- Кузьмищев Леонид (@qwekkh)
+
+---
+
+![BST demo](assets/hasbulla.mp4)
