@@ -58,4 +58,4 @@
 
 ---
 
-ffmpeg -i assets/hasbulla.mp4 assets/hasbulla.gif
+![BST demo](assets/hasbulla.gif)
