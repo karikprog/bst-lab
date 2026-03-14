@@ -416,3 +416,67 @@ int* bstPostorder(const BST* tree)
     postOrder(tree->root, vertices, &index);
     return vertices;
 }
+
+static int compare(const void* x1, const void* x2)
+{
+    return (*(int*)x1 - *(int*)x2);
+}
+static void buildBalanced(BST* tree, const int* arr, const int START, const int END)
+{
+    if (START > END) {
+        return;
+    }
+
+    int mid = (START + END) / 2;
+    bstInsert(tree, arr[mid]);
+
+    buildBalanced(tree, arr, START, mid - 1);
+    buildBalanced(tree, arr, mid + 1, END);
+}
+
+BST* bstMerge(const BST* tree1, const BST* tree2)
+{
+    if (tree1 == NULL || tree2 == NULL) {
+        return NULL;
+    }
+    int size = tree1->size + tree2->size;
+    int* vertices = (int*)malloc(sizeof(int) * (size));
+    if (vertices == NULL) {
+        return NULL;
+    }
+    Iterator* iter1 = iteratorInit(tree1);
+    if (iter1 == NULL) {
+        free(vertices);
+        return NULL;
+    }
+    Iterator* iter2 = iteratorInit(tree2);
+    if (iter2 == NULL) {
+        iteratorFree(iter1);
+        free(vertices);
+        return NULL;
+    }
+    int value = 0;
+    for (int i = 0; i < tree1->size; i++) {
+        iteratorNext(iter1, &value);
+        vertices[i] = value;
+    }
+    for (int i = tree1->size; i < size; i++) {
+        iteratorNext(iter2, &value);
+        vertices[i] = value;
+    }
+    qsort(vertices, size, sizeof(int), compare);
+
+    BST* newTree = initTree();
+    if (newTree == NULL) {
+        free(vertices);
+        iteratorFree(iter1);
+        iteratorFree(iter2);
+        return NULL;
+    }
+    buildBalanced(newTree, vertices, 0, size - 1);
+
+    free(vertices);
+    iteratorFree(iter1);
+    iteratorFree(iter2);
+    return newTree;
+}
