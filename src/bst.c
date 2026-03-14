@@ -170,6 +170,7 @@ void iteratorFree(Iterator* iter)
     free(iter->stack);
     free(iter);
 }
+
 bool bstMax(const BST* tree, int* result)
 {
     if (tree == NULL || tree->root == NULL) {
@@ -249,6 +250,84 @@ bool bstIsValid(const BST* tree)
     return fl;
 }
 
+static Node* findParent(Node* root, Node* node)
+{
+    if (root == NULL || root == node) {
+        return NULL;
+    }
+
+    if (root->left == node || root->right == node) {
+        return root;
+    }
+
+    if (node->value < root->value) {
+        return findParent(root->left, node);
+    }
+    return findParent(root->right, node);
+}
+
+void bstDelete(BST* tree, int value)
+{
+    if (tree == NULL || tree->root == NULL) {
+        return;
+    }
+
+    Node* current = search(tree->root, value);
+    if (current == NULL) {
+        return;
+    }
+
+    if (current->right != NULL) {
+        Node* parent = current;
+        Node* child = parent->right;
+
+        while (child->left != NULL) {
+            parent = child;
+            child = child->left;
+        }
+
+        current->value = child->value;
+        if (parent == current) {
+            current->right = child->right;
+        } else {
+            parent->left = child->right;
+        }
+
+        free(child);
+        tree->size--;
+        return;
+    } else if (current->left != NULL) {
+        Node* parent = current;
+        Node* child = parent->left;
+
+        while (child->right != NULL) {
+            parent = child;
+            child = child->right;
+        }
+
+        current->value = child->value;
+        if (parent == current) {
+            current->left = child->left;
+        } else {
+            parent->right = child->left;
+        }
+
+        free(child);
+        tree->size--;
+        return;
+    }
+    Node* parent = findParent(tree->root, current);
+    if (parent == NULL) {
+        tree->root = NULL;
+    } else if (parent->left == current) {
+        parent->left = NULL;
+    } else {
+        parent->right = NULL;
+    }
+
+    free(current);
+    tree->size--;
+}
 bool bstKthMin(const BST* tree, int k, int* result)
 {
     if (k <= 0 || tree == NULL || k > bstSize(tree)) {
