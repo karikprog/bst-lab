@@ -262,9 +262,8 @@ static Node* findParent(Node* root, Node* node)
 
     if (node->value < root->value) {
         return findParent(root->left, node);
-    } else {
-        return findParent(root->right, node);
     }
+    return findParent(root->right, node);
 }
 
 void bstDelete(BST* tree, int value)
