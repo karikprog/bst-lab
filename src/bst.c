@@ -4,15 +4,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct Node {
+    int value;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+typedef struct BST {
+    Node* root;
+    int size;
+} BST;
+
+typedef struct Iterator {
+    Node** stack;
+    int capacity;
+    int top;
+} Iterator;
+
 BST* initTree()
 {
-    BST* tree = (BST*)malloc(sizeof(BST));
-    if (tree == NULL) {
-        return NULL;
-    }
-    tree->root = NULL;
-    tree->size = 0;
-    return tree;
+    return calloc(1, sizeof(BST));
 }
 
 void cleanTree(Node* root)
@@ -38,7 +49,7 @@ void bstFree(BST** treeRef)
     *treeRef = NULL;
 }
 
-Node* search(Node* node, int value)
+static Node* search(Node* node, int value)
 {
     if (node == NULL || node->value == value) {
         return node;
@@ -49,15 +60,9 @@ Node* search(Node* node, int value)
     return search(node->right, value);
 }
 
-bool bstContains(BST* tree, int value)
+bool bstContains(const BST* tree, int value)
 {
-    if (tree == NULL) {
-        return false;
-    }
-    if (search(tree->root, value) != NULL) {
-        return true;
-    }
-    return false;
+    return tree && search(tree->root, value) != NULL;
 }
 
 int bstInsert(BST* tree, int value)
@@ -141,10 +146,7 @@ Iterator* iteratorInit(const BST* tree)
 
 bool iteratorHasNext(const Iterator* iter)
 {
-    if (iter == NULL || iter->top == 0) {
-        return false;
-    }
-    return true;
+    return iter != NULL && iter->top > 0;
 }
 
 bool iteratorNext(Iterator* iter, int* result)
@@ -199,10 +201,7 @@ bool bstMin(const BST* tree, int* result)
 
 int bstSize(const BST* tree)
 {
-    if (tree == NULL) {
-        return 0;
-    }
-    return tree->size;
+    return tree ? tree->size : 0;
 }
 
 static int nodeHeight(const Node* node)
@@ -219,25 +218,23 @@ static int nodeHeight(const Node* node)
 
 int bstHeight(const BST* tree)
 {
-    if (tree == NULL) {
-        return 0;
-    }
-    return nodeHeight(tree->root);
+    return tree ? nodeHeight(tree->root) : 0;
 }
-static void isValid(const Node* node, int min, int max, bool* fl)
+
+static void isValid(const Node* node, int min, int max, bool* ok)
 {
-    if (!(*fl) || node == NULL) {
+    if (!(*ok) || node == NULL) {
         return;
     }
 
     if (node->value <= min || node->value >= max) {
-        *fl = false;
+        *ok = false;
         return;
     }
 
-    isValid(node->left, min, node->value, fl);
+    isValid(node->left, min, node->value, ok);
 
-    isValid(node->right, node->value, max, fl);
+    isValid(node->right, node->value, max, ok);
 }
 
 bool bstIsValid(const BST* tree)
@@ -245,9 +242,9 @@ bool bstIsValid(const BST* tree)
     if (tree == NULL) {
         return false;
     }
-    bool fl = true;
-    isValid(tree->root, INT_MIN, INT_MAX, &fl);
-    return fl;
+    bool ok = true;
+    isValid(tree->root, INT_MIN, INT_MAX, &ok);
+    return ok;
 }
 
 static Node* findParent(Node* root, Node* node)
@@ -328,14 +325,17 @@ void bstDelete(BST* tree, int value)
     free(current);
     tree->size--;
 }
+
 bool bstKthMin(const BST* tree, int k, int* result)
 {
+    int value;
+    bool ok;
+
     if (k <= 0 || tree == NULL || k > bstSize(tree)) {
         return false;
     }
     Iterator* iter = iteratorInit(tree);
-    int value;
-    bool ok;
+
     for (int i = 0; i < k; i++) {
         ok = iteratorNext(iter, &value);
         if (!ok) {
@@ -357,6 +357,7 @@ static void inOrder(const Node* node, int* arr, int* index)
     arr[(*index)++] = node->value;
     inOrder(node->right, arr, index);
 }
+
 int* bstInorder(const BST* tree)
 {
     if (tree == NULL || tree->root == NULL) {
@@ -380,6 +381,7 @@ static void preOrder(const Node* node, int* arr, int* index)
     preOrder(node->left, arr, index);
     preOrder(node->right, arr, index);
 }
+
 int* bstPreorder(const BST* tree)
 {
     if (tree == NULL || tree->root == NULL) {
@@ -403,6 +405,7 @@ static void postOrder(const Node* node, int* arr, int* index)
     postOrder(node->right, arr, index);
     arr[(*index)++] = node->value;
 }
+
 int* bstPostorder(const BST* tree)
 {
     if (tree == NULL || tree->root == NULL) {
@@ -421,17 +424,18 @@ static int compare(const void* x1, const void* x2)
 {
     return (*(int*)x1 - *(int*)x2);
 }
-static void buildBalanced(BST* tree, const int* arr, const int START, const int END)
+
+static void buildBalanced(BST* tree, const int* arr, int start, int end)
 {
-    if (START > END) {
+    if (start > end) {
         return;
     }
 
-    int mid = (START + END) / 2;
+    int mid = (start + end) / 2;
     bstInsert(tree, arr[mid]);
 
-    buildBalanced(tree, arr, START, mid - 1);
-    buildBalanced(tree, arr, mid + 1, END);
+    buildBalanced(tree, arr, start, mid - 1);
+    buildBalanced(tree, arr, mid + 1, end);
 }
 
 BST* bstMerge(const BST* tree1, const BST* tree2)
